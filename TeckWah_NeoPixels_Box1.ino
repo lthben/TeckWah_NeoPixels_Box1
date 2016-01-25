@@ -8,6 +8,9 @@
 #include <Adafruit_NeoPixel.h> 
 
 //USER DEFINED SETTINGS
+const int SNAKE_LENGTH = 60; //the length in pixels of the lit trail
+const float STRIP_LENGTH = 2.5; //the length in metres of the neopixel strip
+const int PORT_NUM = 2; //the starting Arduino pin for the data line
 bool DEBUG = false;
 
 enum  pattern { NONE, SCANNER };
@@ -126,7 +129,7 @@ class NeoPatterns : public Adafruit_NeoPixel
     { 
         for (int i = 0; i < numPixels(); i++)
         {
-            if (i == Index)  // Scan Pixel to the right
+            if ( (i == Index) && (Index - i < SNAKE_LENGTH) )  // Scan Pixel to the right
             {
 //                 setPixelColor(i, Wheel( ( (i * 256 / numPixels() ) + Index ) & 255) );
 //                byte my_index = ( (i + Index) * 256 / numPixels() ) & 255;
@@ -220,13 +223,29 @@ class NeoPatterns : public Adafruit_NeoPixel
 void Strip1Complete();
 void Strip2Complete();
 void Strip3Complete();
+void Strip4Complete();
+void Strip5Complete();
+void Strip6Complete();
+void Strip7Complete();
+void Strip8Complete();
+void Strip9Complete();
+void Strip10Complete();
+void Strip11Complete();
 
 // -----------------------------
 // Object declarations
 // -----------------------------
-NeoPatterns Strip1(18, 4, NEO_GRB + NEO_KHZ800, &Strip1Complete);
-NeoPatterns Strip2(60, 2, NEO_GRB + NEO_KHZ800, &Strip2Complete);
-//NeoPatterns Strip3(300, 6, NEO_GRB + NEO_KHZ800, &Strip3Complete);
+NeoPatterns Strip1(int(60 * STRIP_LENGTH), PORT_NUM, NEO_GRB + NEO_KHZ800, &Strip1Complete);
+NeoPatterns Strip2(int(60 * STRIP_LENGTH), PORT_NUM + 1, NEO_GRB + NEO_KHZ800, &Strip2Complete);
+NeoPatterns Strip3(int(60 * STRIP_LENGTH), PORT_NUM + 2, NEO_GRB + NEO_KHZ800, &Strip3Complete);
+NeoPatterns Strip4(int(60 * STRIP_LENGTH), PORT_NUM + 3, NEO_GRB + NEO_KHZ800, &Strip4Complete);
+NeoPatterns Strip5(int(60 * STRIP_LENGTH), PORT_NUM + 4, NEO_GRB + NEO_KHZ800, &Strip5Complete);
+NeoPatterns Strip6(int(60 * STRIP_LENGTH), PORT_NUM + 5, NEO_GRB + NEO_KHZ800, &Strip6Complete);
+NeoPatterns Strip7(int(60 * STRIP_LENGTH), PORT_NUM + 6, NEO_GRB + NEO_KHZ800, &Strip7Complete);
+NeoPatterns Strip8(int(60 * STRIP_LENGTH), PORT_NUM + 7, NEO_GRB + NEO_KHZ800, &Strip8Complete);
+NeoPatterns Strip9(int(60 * STRIP_LENGTH), A0, NEO_GRB + NEO_KHZ800, &Strip9Complete);
+NeoPatterns Strip10(int(60 * STRIP_LENGTH), A1, NEO_GRB + NEO_KHZ800, &Strip10Complete);
+NeoPatterns Strip11(int(60 * STRIP_LENGTH), A1, NEO_GRB + NEO_KHZ800, &Strip11Complete);
 
 //------------------------------
 // setup
@@ -234,12 +253,7 @@ NeoPatterns Strip2(60, 2, NEO_GRB + NEO_KHZ800, &Strip2Complete);
 void setup() {
   Serial.begin(9600);
 
-  Strip1.begin();
-  Strip2.begin();
-//  Strip3.begin();
-
-//Strip1.RainbowCycle(2);
-//  Strip1.Scanner( Strip1.Color(255,0,0), 100, 1);
+  Strip1.begin(); Strip2.begin(); Strip3.begin(); Strip4.begin(); Strip5.begin(); Strip6.begin(); Strip7.begin(); Strip8.begin(); Strip9.begin(); Strip10.begin(); Strip11.begin();
 }
 
 //-------------------------
@@ -248,9 +262,7 @@ void setup() {
 
 void loop() {
 
-  Strip1.Update();
-  Strip2.Update();
-//  Strip3.Update();
+  Strip1.Update(); Strip2.Update(); Strip3.Update(); Strip4.Update(); Strip5.Update(); Strip6.Update(); Strip7.Update(); Strip8.Update(); Strip9.Update(); Strip10.Update(); Strip11.Update(); 
   
   read_from_serial();
 }
@@ -261,73 +273,16 @@ void loop() {
 
 void read_from_serial() { //refer to other tab for command list
 
-  unsigned char incomingbyte = 0;
+  int incoming = 0;
 
   if (Serial.available() > 0) {
         
-    incomingbyte = Serial.read();
+    incoming = Serial.read();
 
-    if (incomingbyte == '0') {
-
-        Strip1.ColorSet( Strip1.whiteColor );
-
-    } else if (incomingbyte == '1') {
-
-        Strip1.ColorSet( Strip1.noColor );
-      
-    } else if (incomingbyte == '2') {
-
-        Strip1.ColorSet( Strip1.warmWhiteColor );
-      
-    } else if (incomingbyte == '3') {
-
-        Strip1.ColorSet( Strip1.yellowColor );
-      
-    } else if (incomingbyte == '4') {
-        
-        Strip2.ColorSet( Strip1.pinkColor);
-
-    } else if (incomingbyte == '5') {
-
-        Strip2.ColorSet( Strip1.greenColor);
-        
-    }  else if (incomingbyte == '6') {
-
-     Strip2.ColorSet( Strip1.yellowColor);
-
-    } else if (incomingbyte == '7') {
-
-        Strip2.ColorSet( Strip1.blueColor);
-        
-    } else if (incomingbyte == '8') {
-
-        Strip2.Scanner( Strip1.redColor, 50, 1);
-        
-    } else if (incomingbyte == '9') {
-
-        Strip2.ColorSet(Strip1.noColor);
-        
-    } 
-  }
+    process_command(incoming);
+   }
 }
 
-// -----------------------------
-// Completion callback routines 
-// -----------------------------
-
-void Strip1Complete() {
-  if (DEBUG)  Serial.println("strip 1 complete");
-//  Strip1.ColorSet( Strip1.noColor );
-  //Strip1.Scanner( Strip1.Color(255,0,0), 100, 1 );
-}
-
-void Strip2Complete() {
-  if (DEBUG) Serial.println("strip 2 complete");
-}
-
-void Strip3Complete() {
-  if (DEBUG)  Serial.println("strip 3 complete");
-}
 
 
 
