@@ -7,6 +7,9 @@
 
 #include <Adafruit_NeoPixel.h> 
 
+//USER DEFINED SETTINGS
+bool DEBUG = false;
+
 enum  pattern { NONE, SCANNER };
 enum  direction { FORWARD, REVERSE };
 
@@ -221,8 +224,8 @@ void Strip3Complete();
 // -----------------------------
 // Object declarations
 // -----------------------------
-NeoPatterns Strip1(16, 4, NEO_GRB + NEO_KHZ800, &Strip1Complete);
-//NeoPatterns Strip2(60, 3, NEO_GRB + NEO_KHZ800, &Strip2Complete);
+NeoPatterns Strip1(18, 4, NEO_GRB + NEO_KHZ800, &Strip1Complete);
+NeoPatterns Strip2(60, 2, NEO_GRB + NEO_KHZ800, &Strip2Complete);
 //NeoPatterns Strip3(300, 6, NEO_GRB + NEO_KHZ800, &Strip3Complete);
 
 //------------------------------
@@ -232,7 +235,7 @@ void setup() {
   Serial.begin(9600);
 
   Strip1.begin();
-//  Strip2.begin();
+  Strip2.begin();
 //  Strip3.begin();
 
 //Strip1.RainbowCycle(2);
@@ -246,7 +249,7 @@ void setup() {
 void loop() {
 
   Strip1.Update();
-//  Strip2.Update();
+  Strip2.Update();
 //  Strip3.Update();
   
   read_from_serial();
@@ -281,13 +284,30 @@ void read_from_serial() { //refer to other tab for command list
         Strip1.ColorSet( Strip1.yellowColor );
       
     } else if (incomingbyte == '4') {
-
-        Strip1.ColorSet( Strip1.yellowColor );
+        
+        Strip2.ColorSet( Strip1.pinkColor);
 
     } else if (incomingbyte == '5') {
 
-        Strip1.Scanner( Strip1.Color(2,2,2), 80, 1 );
-    }
+        Strip2.ColorSet( Strip1.greenColor);
+        
+    }  else if (incomingbyte == '6') {
+
+     Strip2.ColorSet( Strip1.yellowColor);
+
+    } else if (incomingbyte == '7') {
+
+        Strip2.ColorSet( Strip1.blueColor);
+        
+    } else if (incomingbyte == '8') {
+
+        Strip2.Scanner( Strip1.redColor, 50, 1);
+        
+    } else if (incomingbyte == '9') {
+
+        Strip2.ColorSet(Strip1.noColor);
+        
+    } 
   }
 }
 
@@ -296,17 +316,17 @@ void read_from_serial() { //refer to other tab for command list
 // -----------------------------
 
 void Strip1Complete() {
-  Serial.println("strip 1 complete");
+  if (DEBUG)  Serial.println("strip 1 complete");
 //  Strip1.ColorSet( Strip1.noColor );
   //Strip1.Scanner( Strip1.Color(255,0,0), 100, 1 );
 }
 
 void Strip2Complete() {
-  Serial.println("strip 2 complete");
+  if (DEBUG) Serial.println("strip 2 complete");
 }
 
 void Strip3Complete() {
-  Serial.println("strip 3 complete");
+  if (DEBUG)  Serial.println("strip 3 complete");
 }
 
 
