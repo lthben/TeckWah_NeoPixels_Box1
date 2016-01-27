@@ -1,47 +1,43 @@
 /*
-Serial messages (byte 0 - 255):
+ * Long x 10, Achievement x 4
+ * 
  * 0 - turn off long strip
- * 1 - turn off button 1 light
- * 2 - turn on button 2 light
- * 3 - turn off button 2 light
- * 4 - turn on rfid 1 tag 1 light
- * 5 - turn on rfid 1 tag 2 light
- * 6 - turn on rfid 1 tag 3 light
- * 7 - turn on rfid 1 tag 4 light
- * 8 - turn on rfid 1 circle led waiting mode
- * 9 - turn off rfid 1 circle led  
- * a - turn on rfid 2 tag 1 light
- * b - turn on rfid 2 tag 2 light
- * c - turn on rfid 2 tag 3 light
- * d - turn on rfid 2 tag 4 light
- * e - turn on rfid 2 circle led waiting mode
- * f - turn off rfid 2 circle led 
+ * 1 - turn on long strip forward animation
+ * 2 - turn on long strip reverse animation
+ * 3 - turn on achievement forward animation
+ * 4 - turn off achievement 
  * */
 
 void process_command(int incoming) {
 
     switch(incoming) {
 
-        //turn off
+        //all off
         case('0'): 
-            Strip1.ColorSet(Strip1.noColor);
-            Strip2.ColorSet(Strip1.noColor);
-            Strip3.ColorSet(Strip1.noColor);
-            Strip4.ColorSet(Strip1.noColor);
-            Strip5.ColorSet(Strip1.noColor);
-            Strip6.ColorSet(Strip1.noColor);
-            Strip7.ColorSet(Strip1.noColor);
-            Strip8.ColorSet(Strip1.noColor);
-            Strip9.ColorSet(Strip1.noColor);
-            Strip10.ColorSet(Strip1.noColor);
-            Strip11.ColorSet(Strip1.noColor);
+            Strip1.TurnOff(); Strip2.TurnOff(); Strip3.TurnOff(); Strip4.TurnOff();
+            Strip5.TurnOff(); Strip6.TurnOff(); Strip7.TurnOff(); Strip8.TurnOff();
+            Strip9.TurnOff(); Strip10.TurnOff(); 
+            
+            Strip11.TurnOff(); Strip12.TurnOff(); Strip13.TurnOff(); Strip14.TurnOff();
         break; 
+        case('1'): Strip1.Scanner( Strip1.whiteColor, MY_INTERVAL, 1 ); break;
+        case('2'): Strip10.Scanner( Strip1.whiteColor, MY_INTERVAL, -1); break;   
 
-        //start forward animation
-        case('1'): Strip1.Scanner( Strip1.Color(255, 255, 255), 1, 1 ); break;
-        
-        //start reverse animation
-        case('2'): Strip10.Scanner( Strip1.Color(255, 255, 255), 1, -1); break;   
+        //achievement
+        case('3'): 
+           Strip11.Fade( Strip1.whiteColor, 128, FADE_INTERVAL, 1 ); 
+           
+        break;
+        case('4'): 
+        //safe option
+//            Strip11.TurnOff(); Strip12.TurnOff(); Strip13.TurnOff(); Strip14.TurnOff();  
+
+            //fade off all rapidly at once. Not sure if this will work.
+            Strip11.Fade( Strip1.whiteColor, 128, 1, 0); 
+            Strip12.Fade( Strip1.whiteColor, 128, 1, 0);
+            Strip13.Fade( Strip1.whiteColor, 128, 1, 0);
+            Strip14.Fade( Strip1.whiteColor, 128, 1, 0);
+        break;   
   }
  }
   

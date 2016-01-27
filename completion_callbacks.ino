@@ -6,7 +6,7 @@ void Strip1Complete() {
 
   if (Strip1.Direction == FORWARD)
   {
-    Strip2.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip2.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
     Serial.println("light4b_finished");
@@ -21,10 +21,10 @@ void Strip2Complete() {
 
   if (Strip2.Direction == FORWARD)
   {
-    Strip3.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip3.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip1.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip1.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -36,10 +36,10 @@ void Strip3Complete() {
 
   if (Strip3.Direction == FORWARD)
   {
-    Strip4.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip4.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip2.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip2.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -51,10 +51,10 @@ void Strip4Complete() {
 
   if (Strip4.Direction == FORWARD)
   {
-    Strip5.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip5.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip3.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip3.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -66,10 +66,10 @@ void Strip5Complete() {
 
   if (Strip5.Direction == FORWARD)
   {
-    Strip6.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip6.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip4.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip4.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -81,10 +81,10 @@ void Strip6Complete() {
 
   if (Strip6.Direction == FORWARD)
   {
-    Strip7.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip7.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip5.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip5.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -96,10 +96,10 @@ void Strip7Complete() {
 
   if (Strip7.Direction == FORWARD)
   {
-    Strip8.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip8.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip6.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip6.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -111,10 +111,10 @@ void Strip8Complete() {
 
   if (Strip8.Direction == FORWARD)
   {
-    Strip9.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip9.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip7.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip7.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -126,10 +126,10 @@ void Strip9Complete() {
 
   if (Strip9.Direction == FORWARD)
   {
-    Strip10.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
+    Strip10.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, 1 );
   } else
   {
-    Strip8.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip8.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
 
@@ -141,24 +141,52 @@ void Strip10Complete() {
 
   if (Strip10.Direction == FORWARD)
   {
-    Strip11.Scanner( Strip1.Color(255, 255, 255), 1, 1 );
-  } else
-  {
-    Strip9.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
-  }
-}
-
-void Strip11Complete() {
-
-  if (DEBUG) Serial.println("strip 11 complete");
-  Strip11.ActivePattern = NONE;
-  Strip11.ColorSet(Strip1.noColor);
-
-  if (Strip11.Direction == FORWARD)
-  {
     Serial.println("light4a_finished");
   } else
   {
-    Strip10.Scanner( Strip1.Color(255, 255, 255), 1, -1 );
+    Strip9.Scanner( Strip1.Color(255, 255, 255), MY_INTERVAL, -1 );
   }
 }
+
+void Strip11Complete() { //achievement1
+
+    if (DEBUG) Serial.println("strip 11 complete");
+    Strip11.ActivePattern = NONE; //prevent fade update
+
+    if (Strip11.Direction == FORWARD) { //trigger the next pixel
+        delay(ACHIEVEMENT_DELAY);
+        Strip12.Fade( Strip1.whiteColor, 128, FADE_INTERVAL, 1); 
+    }
+}
+
+void Strip12Complete() { //achievement2
+
+    if (DEBUG) Serial.println("strip 12 complete");
+    Strip12.ActivePattern = NONE; //prevent fade update
+
+    if (Strip12.Direction == FORWARD) { //trigger the next pixel
+        delay(ACHIEVEMENT_DELAY);
+        Strip13.Fade( Strip1.whiteColor, 128, FADE_INTERVAL, 1);
+    }
+}
+
+void Strip13Complete() { //achievement3
+
+    if (DEBUG) Serial.println("strip 13 complete");
+    Strip13.ActivePattern = NONE; //prevent fade update
+
+    if (Strip13.Direction == FORWARD) { //trigger the next pixel
+        delay(ACHIEVEMENT_DELAY);
+        Strip14.Fade( Strip1.whiteColor, 128, FADE_INTERVAL, 1);
+    }
+}
+
+void Strip14Complete() { //achievement4
+ 
+    if (DEBUG) Serial.println("strip 14 complete");
+    Strip14.ActivePattern = NONE; //prevent fade update
+
+    Serial.println("light10_finished");//notify the Flash client 
+}
+
+

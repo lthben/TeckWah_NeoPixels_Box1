@@ -1,19 +1,22 @@
 /* Author: Benjamin Low
  * 
- * Description: Teck Wah gallery NeoPixels Box 1
+ * Description: Teck Wah gallery NeoPixels Box 1 - Long x 10, Achievement x 4
  *
- * Last updated: 23 Jan 2016
+ * Last updated: 27 Jan 2016
  */
 
 #include <Adafruit_NeoPixel.h> 
 
 //USER DEFINED SETTINGS
+const int MY_INTERVAL = 6; //interval timing between updates of long strip Index in ms. 6ms makes about 16s for the whole animation.
 const int SNAKE_LENGTH = 60; //the length in pixels of the lit trail
 const float STRIP_LENGTH = 2.5; //the length in metres of the neopixel strip
 const int PORT_NUM = 2; //the starting Arduino pin for the data line
+const int FADE_INTERVAL = 8; //lower number is higher speed for fade
+const int ACHIEVEMENT_DELAY = 0; //additional delay between each of the four strips turning on
 bool DEBUG = false;
 
-enum  pattern { NONE, SCANNER };
+enum  pattern { NONE, SCANNER, FADE };
 enum  direction { FORWARD, REVERSE };
 
 // NeoPattern Class - derived from the Adafruit_NeoPixel class
@@ -62,6 +65,9 @@ class NeoPatterns : public Adafruit_NeoPixel
                 case SCANNER:
                     ScannerUpdate();
                     break;
+                case FADE:
+                    FadeUpdate();                  
+                break;
                 default:
                     break;
             }
@@ -101,8 +107,9 @@ class NeoPatterns : public Adafruit_NeoPixel
         }
     }
 
-    void TurnOff() {
+     void TurnOff() {
         ColorSet(Color(0,0,0));
+        ActivePattern = NONE;
     }
     
     void Scanner(uint32_t color1, uint8_t interval, int my_dir)
@@ -129,7 +136,7 @@ class NeoPatterns : public Adafruit_NeoPixel
     { 
         for (int i = 0; i < numPixels(); i++)
         {
-            if ( (i == Index) && (Index - i < SNAKE_LENGTH) )  // Scan Pixel to the right
+            if ( (i <= Index) && (Index - i < SNAKE_LENGTH) )  // Scan Pixel to the right
             {
 //                 setPixelColor(i, Wheel( ( (i * 256 / numPixels() ) + Index ) & 255) );
 //                byte my_index = ( (i + Index) * 256 / numPixels() ) & 255;
@@ -153,7 +160,44 @@ class NeoPatterns : public Adafruit_NeoPixel
         Increment();
     }
     
-   
+    // Initialize for a Fade
+    void Fade(uint32_t _color1, uint16_t steps, uint8_t interval, int state)
+    {   
+        //state = 1 for fade on, 0 = fade off
+        
+        ActivePattern = FADE;
+        Interval = interval;
+        TotalSteps = steps;
+        Color1 = noColor;
+        Color2 = _color1;
+        
+        if (state == 1) //turn on 
+        {   
+            Index = 0;    
+            Direction = FORWARD;
+            
+        } else if (state == 0) //turn off
+        {
+            Index = TotalSteps - 1;
+            Direction = REVERSE;
+        }
+    }
+    
+    // Update the Fade Pattern
+    void FadeUpdate()
+    {
+        // Calculate linear interpolation between Color1 and Color2
+        // Optimise order of operations to minimize truncation error
+
+        uint8_t red = ((Red(Color1) * (TotalSteps - Index)) + (Red(Color2) * Index)) / TotalSteps;
+        uint8_t green = ((Green(Color1) * (TotalSteps - Index)) + (Green(Color2) * Index)) / TotalSteps;
+        uint8_t blue = ((Blue(Color1) * (TotalSteps - Index)) + (Blue(Color2) * Index)) / TotalSteps;
+            
+        ColorSet(Color(red, green, blue));
+        show();
+        Increment();
+    }
+    
     // Calculate 50% dimmed version of a color (used by ScannerUpdate)
     uint32_t DimColor(uint32_t color)
     {
@@ -165,8 +209,6 @@ class NeoPatterns : public Adafruit_NeoPixel
     // Set all pixels to a color (synchronously)
     void ColorSet(uint32_t color)
     {
-        ActivePattern = NONE;
-        
         for (int i = 0; i < numPixels(); i++)
         {
             setPixelColor(i, color);
@@ -231,11 +273,16 @@ void Strip8Complete();
 void Strip9Complete();
 void Strip10Complete();
 void Strip11Complete();
+void Strip12Complete();
+void Strip13Complete();
+void Strip14Complete();
 
 // -----------------------------
 // Object declarations
 // -----------------------------
-NeoPatterns Strip1(int(60 * STRIP_LENGTH), PORT_NUM, NEO_GRB + NEO_KHZ800, &Strip1Complete);
+
+//long strip
+NeoPatterns Strip1(int(60 * STRIP_LENGTH), A0, NEO_GRB + NEO_KHZ800, &Strip1Complete);
 NeoPatterns Strip2(int(60 * STRIP_LENGTH), PORT_NUM + 1, NEO_GRB + NEO_KHZ800, &Strip2Complete);
 NeoPatterns Strip3(int(60 * STRIP_LENGTH), PORT_NUM + 2, NEO_GRB + NEO_KHZ800, &Strip3Complete);
 NeoPatterns Strip4(int(60 * STRIP_LENGTH), PORT_NUM + 3, NEO_GRB + NEO_KHZ800, &Strip4Complete);
@@ -243,9 +290,14 @@ NeoPatterns Strip5(int(60 * STRIP_LENGTH), PORT_NUM + 4, NEO_GRB + NEO_KHZ800, &
 NeoPatterns Strip6(int(60 * STRIP_LENGTH), PORT_NUM + 5, NEO_GRB + NEO_KHZ800, &Strip6Complete);
 NeoPatterns Strip7(int(60 * STRIP_LENGTH), PORT_NUM + 6, NEO_GRB + NEO_KHZ800, &Strip7Complete);
 NeoPatterns Strip8(int(60 * STRIP_LENGTH), PORT_NUM + 7, NEO_GRB + NEO_KHZ800, &Strip8Complete);
-NeoPatterns Strip9(int(60 * STRIP_LENGTH), A0, NEO_GRB + NEO_KHZ800, &Strip9Complete);
-NeoPatterns Strip10(int(60 * STRIP_LENGTH), A1, NEO_GRB + NEO_KHZ800, &Strip10Complete);
-NeoPatterns Strip11(int(60 * STRIP_LENGTH), A1, NEO_GRB + NEO_KHZ800, &Strip11Complete);
+NeoPatterns Strip9(int(60 * STRIP_LENGTH), PORT_NUM + 8, NEO_GRB + NEO_KHZ800, &Strip9Complete);
+NeoPatterns Strip10(int(60 * STRIP_LENGTH), PORT_NUM + 9, NEO_GRB + NEO_KHZ800, &Strip10Complete);
+
+//achievement
+NeoPatterns Strip11(60, 2, NEO_GRB + NEO_KHZ800, &Strip11Complete);
+NeoPatterns Strip12(60, A1, NEO_GRB + NEO_KHZ800, &Strip12Complete);
+NeoPatterns Strip13(60, A2, NEO_GRB + NEO_KHZ800, &Strip13Complete);
+NeoPatterns Strip14(60, A3, NEO_GRB + NEO_KHZ800, &Strip14Complete);
 
 //------------------------------
 // setup
@@ -253,7 +305,11 @@ NeoPatterns Strip11(int(60 * STRIP_LENGTH), A1, NEO_GRB + NEO_KHZ800, &Strip11Co
 void setup() {
   Serial.begin(9600);
 
-  Strip1.begin(); Strip2.begin(); Strip3.begin(); Strip4.begin(); Strip5.begin(); Strip6.begin(); Strip7.begin(); Strip8.begin(); Strip9.begin(); Strip10.begin(); Strip11.begin();
+  Strip1.begin(); Strip2.begin(); Strip3.begin(); Strip4.begin(); 
+  Strip5.begin(); Strip6.begin(); Strip7.begin(); Strip8.begin(); 
+  Strip9.begin(); Strip10.begin();
+  
+  Strip11.begin(); Strip12.begin(); Strip13.begin(); Strip14.begin(); 
 }
 
 //-------------------------
@@ -262,7 +318,11 @@ void setup() {
 
 void loop() {
 
-  Strip1.Update(); Strip2.Update(); Strip3.Update(); Strip4.Update(); Strip5.Update(); Strip6.Update(); Strip7.Update(); Strip8.Update(); Strip9.Update(); Strip10.Update(); Strip11.Update(); 
+  Strip1.Update(); Strip2.Update(); Strip3.Update(); Strip4.Update(); 
+  Strip5.Update(); Strip6.Update(); Strip7.Update(); Strip8.Update(); 
+  Strip9.Update(); Strip10.Update(); 
+
+  Strip11.Update(); Strip12.Update(); Strip13.Update(); Strip14.Update(); 
   
   read_from_serial();
 }
