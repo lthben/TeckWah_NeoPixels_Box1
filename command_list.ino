@@ -12,22 +12,24 @@ void process_command(int incoming) {
 
     switch(incoming) {
 
-        //all off
-        case('0'): 
+        //long strip 
+        case('0'): //all off
             Strip1.TurnOff(); Strip2.TurnOff(); Strip3.TurnOff(); Strip4.TurnOff();
             Strip5.TurnOff(); Strip6.TurnOff(); Strip7.TurnOff(); Strip8.TurnOff();
             Strip9.TurnOff(); Strip10.TurnOff(); 
             
             Strip11.TurnOff(); Strip12.TurnOff(); Strip13.TurnOff(); Strip14.TurnOff();
         break; 
-        case('1'): Strip1.Scanner( Strip1.whiteColor, MY_INTERVAL, 1 ); break;
-        case('2'): Strip10.Scanner( Strip1.whiteColor, MY_INTERVAL, -1); break;   
+        
+        case('1'): Strip1.Scanner( Strip1.whiteColor, MY_INTERVAL, 1 ); break; //forward animation
+        case('2'): Strip10.Scanner( Strip1.whiteColor, MY_INTERVAL, -1); break; //backward animation
 
         //achievement
         case('3'): 
-           Strip11.Fade( Strip1.whiteColor, 128, FADE_INTERVAL, 1 ); 
-           
+          Strip11.Fade( Strip1.whiteColor, 128, FADE_INTERVAL, 1 ); 
+            
         break;
+        
         case('4'): 
         //safe option
 //            Strip11.TurnOff(); Strip12.TurnOff(); Strip13.TurnOff(); Strip14.TurnOff();  
@@ -38,6 +40,18 @@ void process_command(int incoming) {
             Strip13.Fade( Strip1.whiteColor, 128, 1, 0);
             Strip14.Fade( Strip1.whiteColor, 128, 1, 0);
         break;   
+
+        case('5'): //testing only
+            Strip1.ColorSet(Strip1.whiteColor);
+        break;
+
+        case('6'): //testing
+            Strip2.ColorSet(Strip1.whiteColor);
+        break;
+
+        case('7'): //testing
+            Strip5.ColorSet(Strip1.whiteColor);
+        break;
   }
  }
   

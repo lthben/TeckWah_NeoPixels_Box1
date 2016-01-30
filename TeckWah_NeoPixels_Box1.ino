@@ -282,7 +282,7 @@ void Strip14Complete();
 // -----------------------------
 
 //long strip
-NeoPatterns Strip1(int(60 * STRIP_LENGTH), A0, NEO_GRB + NEO_KHZ800, &Strip1Complete);
+NeoPatterns Strip1(int(60 * STRIP_LENGTH), PORT_NUM, NEO_GRB + NEO_KHZ800, &Strip1Complete);
 NeoPatterns Strip2(int(60 * STRIP_LENGTH), PORT_NUM + 1, NEO_GRB + NEO_KHZ800, &Strip2Complete);
 NeoPatterns Strip3(int(60 * STRIP_LENGTH), PORT_NUM + 2, NEO_GRB + NEO_KHZ800, &Strip3Complete);
 NeoPatterns Strip4(int(60 * STRIP_LENGTH), PORT_NUM + 3, NEO_GRB + NEO_KHZ800, &Strip4Complete);
@@ -294,7 +294,7 @@ NeoPatterns Strip9(int(60 * STRIP_LENGTH), PORT_NUM + 8, NEO_GRB + NEO_KHZ800, &
 NeoPatterns Strip10(int(60 * STRIP_LENGTH), PORT_NUM + 9, NEO_GRB + NEO_KHZ800, &Strip10Complete);
 
 //achievement
-NeoPatterns Strip11(60, 2, NEO_GRB + NEO_KHZ800, &Strip11Complete);
+NeoPatterns Strip11(60, A0, NEO_GRB + NEO_KHZ800, &Strip11Complete);
 NeoPatterns Strip12(60, A1, NEO_GRB + NEO_KHZ800, &Strip12Complete);
 NeoPatterns Strip13(60, A2, NEO_GRB + NEO_KHZ800, &Strip13Complete);
 NeoPatterns Strip14(60, A3, NEO_GRB + NEO_KHZ800, &Strip14Complete);
