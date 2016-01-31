@@ -40,18 +40,6 @@ void process_command(int incoming) {
             Strip13.Fade( Strip1.whiteColor, 128, 1, 0);
             Strip14.Fade( Strip1.whiteColor, 128, 1, 0);
         break;   
-
-        case('5'): //testing only
-            Strip1.ColorSet(Strip1.whiteColor);
-        break;
-
-        case('6'): //testing
-            Strip2.ColorSet(Strip1.whiteColor);
-        break;
-
-        case('7'): //testing
-            Strip5.ColorSet(Strip1.whiteColor);
-        break;
   }
  }
   
