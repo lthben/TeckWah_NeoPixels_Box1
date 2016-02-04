@@ -2,7 +2,7 @@
  *
  * Description: Teck Wah gallery NeoPixels Box 1 - Long x 10, Achievement x 4
  *
- * Last updated: 27 Jan 2016
+ * Last updated: 4 Feb 2016
  */
 
 #include <Adafruit_NeoPixel.h>
